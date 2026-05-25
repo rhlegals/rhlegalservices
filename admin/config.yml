@@ -1,0 +1,414 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: "public/images"
+public_folder: "/images"
+
+locale: "es"
+
+collections:
+
+  # ─────────────────────────────────────────────
+  # BLOG — archivos Markdown en src/content/blog/
+  # ─────────────────────────────────────────────
+  - name: "blog"
+    label: "Blog"
+    label_singular: "Artículo"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { name: "title", label: "Título", widget: "string" }
+      - { name: "description", label: "Descripción (SEO)", widget: "text" }
+      - { name: "pubDate", label: "Fecha de publicación", widget: "datetime", format: "YYYY-MM-DD" }
+      - name: "language"
+        label: "Idioma"
+        widget: "select"
+        options:
+          - { label: "Español", value: "es" }
+          - { label: "English", value: "en" }
+      - { name: "author", label: "Autor", widget: "string" }
+      - { name: "category", label: "Categoría", widget: "string" }
+      - { name: "image", label: "Imagen principal", widget: "image" }
+      - { name: "imageAlt", label: "Texto alternativo de imagen", widget: "string", required: false }
+      - { name: "body", label: "Contenido", widget: "markdown" }
+
+  # ─────────────────────────────────────────────
+  # PÁGINAS (Singletons) — src/content/paginas/
+  # ─────────────────────────────────────────────
+  - name: "paginas"
+    label: "Páginas"
+    files:
+
+      # ── INICIO ──
+      - name: "inicio"
+        label: "Página de Inicio"
+        file: "src/content/paginas/inicio.yaml"
+        fields:
+
+          - name: "zona_hero"
+            label: "Hero — Sección principal"
+            widget: "object"
+            fields:
+              - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+              - { name: "subtitulo_es", label: "Subtítulo (ES)", widget: "text", required: false }
+              - { name: "subtitulo_en", label: "Subtitle (EN)", widget: "text", required: false }
+              - { name: "aclaracion_es", label: "Aclaración inferior (ES)", widget: "string", required: false }
+              - { name: "aclaracion_en", label: "Disclaimer (EN)", widget: "string", required: false }
+              - { name: "imagen_fondo", label: "Imagen de fondo", widget: "image" }
+
+          - name: "seccion_porque_rh"
+            label: "Sección — ¿Por qué RH Legal?"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+              - { name: "descripcion_es", label: "Descripción (ES)", widget: "text" }
+              - { name: "descripcion_en", label: "Description (EN)", widget: "text" }
+              - name: "pilares"
+                label: "Pilares (6 tarjetas)"
+                widget: "list"
+                fields:
+                  - name: "icono"
+                    label: "Icono"
+                    widget: "select"
+                    options:
+                      - { label: "Balanza", value: "balanza" }
+                      - { label: "Globo", value: "globo" }
+                      - { label: "Escudo", value: "escudo" }
+                      - { label: "Cronómetro", value: "cronometro" }
+                      - { label: "Manos", value: "manos" }
+                      - { label: "Candado", value: "candado" }
+                  - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+                  - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+                  - { name: "texto_es", label: "Texto (ES)", widget: "text" }
+                  - { name: "texto_en", label: "Text (EN)", widget: "text" }
+
+          - name: "seccion_cta"
+            label: "Sección — Llamada a la acción final"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+              - { name: "subtitulo_es", label: "Subtítulo (ES)", widget: "text" }
+              - { name: "subtitulo_en", label: "Subtitle (EN)", widget: "text" }
+              - { name: "texto_boton_es", label: "Texto del botón (ES)", widget: "string" }
+              - { name: "texto_boton_en", label: "Button text (EN)", widget: "string" }
+
+          - name: "seccion_contacto_formulario"
+            label: "Sección — Formulario de contacto del Hero"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "titulo_es", label: "Título del formulario (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Form title (EN)", widget: "string" }
+              - { name: "descripcion_es", label: "Descripción / subtítulo (ES)", widget: "string" }
+              - { name: "descripcion_en", label: "Description / subtitle (EN)", widget: "string" }
+              - name: "puntos_clave"
+                label: "Puntos clave (recuadro amarillo)"
+                widget: "list"
+                fields:
+                  - { name: "texto_es", label: "Punto (ES)", widget: "string" }
+                  - { name: "texto_en", label: "Point (EN)", widget: "string" }
+
+      # ── NUESTRA FIRMA ──
+      - name: "firma"
+        label: "Nuestra Firma / Our Firm"
+        file: "src/content/paginas/firma.yaml"
+        fields:
+
+          - name: "zona_hero"
+            label: "Hero — Sección principal"
+            widget: "object"
+            fields:
+              - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+              - { name: "descripcion_es", label: "Descripción (ES)", widget: "text", required: false }
+              - { name: "descripcion_en", label: "Description (EN)", widget: "text", required: false }
+              - { name: "imagen_fondo", label: "Imagen de fondo", widget: "image" }
+
+          - name: "seccion_historia"
+            label: "Sección — Nuestra Historia"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+              - name: "parrafos_es"
+                label: "Párrafos (ES)"
+                widget: "list"
+                field: { name: "parrafo", label: "Párrafo", widget: "text" }
+              - name: "parrafos_en"
+                label: "Paragraphs (EN)"
+                widget: "list"
+                field: { name: "paragraph", label: "Paragraph", widget: "text" }
+              - { name: "imagen_lateral", label: "Imagen lateral", widget: "image" }
+
+          - name: "seccion_mision_valores"
+            label: "Sección — Misión y Valores"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+              - name: "items"
+                label: "Ítems de valores"
+                widget: "list"
+                fields:
+                  - name: "icono"
+                    label: "Icono"
+                    widget: "select"
+                    options:
+                      - { label: "Diamante", value: "diamante" }
+                      - { label: "Brújula", value: "brujula" }
+                      - { label: "Balanza", value: "balanza" }
+                      - { label: "Globo", value: "globo" }
+                      - { label: "Cronómetro", value: "cronometro" }
+                      - { label: "Manos", value: "manos" }
+                  - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+                  - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+                  - { name: "texto_es", label: "Texto (ES)", widget: "text" }
+                  - { name: "texto_en", label: "Text (EN)", widget: "text" }
+
+          - name: "seccion_equipo"
+            label: "Sección — Equipo / Team"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "titulo_es", label: "Etiqueta sección (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Section label (EN)", widget: "string" }
+              - { name: "subtitulo_es", label: "Subtítulo (ES)", widget: "string" }
+              - { name: "subtitulo_en", label: "Subtitle (EN)", widget: "string" }
+              - { name: "nombre", label: "Nombre completo", widget: "string" }
+              - { name: "cargo_es", label: "Cargo (ES)", widget: "string" }
+              - { name: "cargo_en", label: "Position (EN)", widget: "string" }
+              - name: "bio_es"
+                label: "Biografía (ES) — párrafos"
+                widget: "list"
+                field: { name: "parrafo", label: "Párrafo", widget: "text" }
+              - name: "bio_en"
+                label: "Biography (EN) — paragraphs"
+                widget: "list"
+                field: { name: "paragraph", label: "Paragraph", widget: "text" }
+              - { name: "imagen_perfil", label: "Foto de perfil", widget: "image" }
+              - name: "datos_contacto"
+                label: "Datos de contacto"
+                widget: "object"
+                fields:
+                  - { name: "email", label: "Email", widget: "string" }
+                  - { name: "linkedin", label: "LinkedIn (handle)", widget: "string" }
+                  - { name: "ubicacion", label: "Ubicación", widget: "string" }
+              - name: "etiquetas_practica"
+                label: "Etiquetas de práctica"
+                widget: "list"
+                field: { name: "etiqueta", label: "Etiqueta", widget: "string" }
+
+          - name: "seccion_porque_elegirnos"
+            label: "Sección — Por qué elegirnos (Contadores)"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "frase_ganadora_es", label: "Frase ganadora (ES)", widget: "string" }
+              - { name: "frase_ganadora_en", label: "Winning phrase (EN)", widget: "string" }
+              - name: "contadores"
+                label: "Contadores estadísticos"
+                widget: "list"
+                fields:
+                  - { name: "numero", label: "Número (ej: +200)", widget: "string" }
+                  - { name: "etiqueta_es", label: "Etiqueta (ES)", widget: "string" }
+                  - { name: "etiqueta_en", label: "Label (EN)", widget: "string" }
+                  - { name: "descripcion_es", label: "Descripción (ES)", widget: "text" }
+                  - { name: "descripcion_en", label: "Description (EN)", widget: "text" }
+
+          - name: "seccion_contacto_formulario"
+            label: "Sección — Formulario de contacto"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+              - { name: "descripcion_es", label: "Descripción (ES)", widget: "text" }
+              - { name: "descripcion_en", label: "Description (EN)", widget: "text" }
+              - name: "puntos_clave"
+                label: "Puntos clave"
+                widget: "list"
+                fields:
+                  - { name: "texto_es", label: "Punto (ES)", widget: "string" }
+                  - { name: "texto_en", label: "Point (EN)", widget: "string" }
+
+  # ─────────────────────────────────────────────
+  # SERVICIOS — src/content/servicios/
+  # ─────────────────────────────────────────────
+  - name: "servicios"
+    label: "Servicios"
+    files:
+
+      # ── DERECHO MARCARIO ──
+      - name: "derecho-marcario"
+        label: "Derecho Marcario y Propiedad Intelectual"
+        file: "src/content/servicios/derecho-marcario.yaml"
+        fields:
+
+          - name: "meta"
+            label: "Metadatos"
+            widget: "object"
+            fields:
+              - { name: "id", label: "ID (no cambiar)", widget: "string" }
+              - { name: "slug", label: "Slug URL (no cambiar)", widget: "string" }
+              - { name: "orden", label: "Orden en Home (1, 2, 3…)", widget: "number", value_type: "int" }
+
+          - name: "tarjeta_inicio"
+            label: "Tarjeta en la página de Inicio"
+            widget: "object"
+            fields:
+              - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+              - { name: "mini_descripcion_es", label: "Mini descripción (ES)", widget: "text" }
+              - { name: "mini_descripcion_en", label: "Mini description (EN)", widget: "text" }
+              - { name: "imagen_fondo_tarjeta", label: "Imagen de fondo tarjeta", widget: "image" }
+              - { name: "alt_es", label: "Alt de imagen (ES)", widget: "string", required: false }
+              - { name: "alt_en", label: "Image alt (EN)", widget: "string", required: false }
+
+          - name: "pagina_interna"
+            label: "Página interna del servicio"
+            widget: "object"
+            fields:
+              - { name: "hero_titulo_es", label: "Título del Hero (ES)", widget: "string" }
+              - { name: "hero_titulo_en", label: "Hero title (EN)", widget: "string" }
+              - { name: "hero_imagen_fondo", label: "Imagen de fondo del Hero", widget: "image" }
+              - { name: "introduccion_es", label: "Introducción (ES)", widget: "text" }
+              - { name: "introduccion_en", label: "Introduction (EN)", widget: "text" }
+              - name: "bloques_contenido"
+                label: "Bloques de contenido (tarjetas de servicios)"
+                widget: "list"
+                required: false
+                fields:
+                  - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+                  - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+                  - { name: "texto_es", label: "Texto (ES)", widget: "text" }
+                  - { name: "texto_en", label: "Text (EN)", widget: "text" }
+              - name: "seccion_faq"
+                label: "FAQ — Preguntas frecuentes"
+                widget: "list"
+                required: false
+                fields:
+                  - { name: "pregunta_es", label: "Pregunta (ES)", widget: "string" }
+                  - { name: "pregunta_en", label: "Question (EN)", widget: "string" }
+                  - { name: "respuesta_es", label: "Respuesta (ES)", widget: "text" }
+                  - { name: "respuesta_en", label: "Answer (EN)", widget: "text" }
+
+      # ── DERECHO MIGRATORIO ──
+      - name: "derecho-migratorio"
+        label: "Derecho Migratorio y Visas"
+        file: "src/content/servicios/derecho-migratorio.yaml"
+        fields:
+
+          - name: "meta"
+            label: "Metadatos"
+            widget: "object"
+            fields:
+              - { name: "id", label: "ID (no cambiar)", widget: "string" }
+              - { name: "slug", label: "Slug URL (no cambiar)", widget: "string" }
+              - { name: "orden", label: "Orden en Home (1, 2, 3…)", widget: "number", value_type: "int" }
+
+          - name: "tarjeta_inicio"
+            label: "Tarjeta en la página de Inicio"
+            widget: "object"
+            fields:
+              - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+              - { name: "mini_descripcion_es", label: "Mini descripción (ES)", widget: "text" }
+              - { name: "mini_descripcion_en", label: "Mini description (EN)", widget: "text" }
+              - { name: "imagen_fondo_tarjeta", label: "Imagen de fondo tarjeta", widget: "image" }
+              - { name: "alt_es", label: "Alt de imagen (ES)", widget: "string", required: false }
+              - { name: "alt_en", label: "Image alt (EN)", widget: "string", required: false }
+
+          - name: "pagina_interna"
+            label: "Página interna del servicio"
+            widget: "object"
+            fields:
+              - { name: "hero_titulo_es", label: "Título del Hero (ES)", widget: "string" }
+              - { name: "hero_titulo_en", label: "Hero title (EN)", widget: "string" }
+              - { name: "hero_imagen_fondo", label: "Imagen de fondo del Hero", widget: "image" }
+              - { name: "introduccion_es", label: "Introducción (ES)", widget: "text" }
+              - { name: "introduccion_en", label: "Introduction (EN)", widget: "text" }
+              - name: "bloques_contenido"
+                label: "Bloques de contenido (tarjetas de servicios)"
+                widget: "list"
+                required: false
+                fields:
+                  - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+                  - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+                  - { name: "texto_es", label: "Texto (ES)", widget: "text" }
+                  - { name: "texto_en", label: "Text (EN)", widget: "text" }
+              - name: "seccion_faq"
+                label: "FAQ — Preguntas frecuentes"
+                widget: "list"
+                required: false
+                fields:
+                  - { name: "pregunta_es", label: "Pregunta (ES)", widget: "string" }
+                  - { name: "pregunta_en", label: "Question (EN)", widget: "string" }
+                  - { name: "respuesta_es", label: "Respuesta (ES)", widget: "text" }
+                  - { name: "respuesta_en", label: "Answer (EN)", widget: "text" }
+
+      # ── OTROS SERVICIOS ──
+      - name: "otros-servicios"
+        label: "Derecho Corporativo y Civil"
+        file: "src/content/servicios/otros-servicios.yaml"
+        fields:
+
+          - name: "meta"
+            label: "Metadatos"
+            widget: "object"
+            fields:
+              - { name: "id", label: "ID (no cambiar)", widget: "string" }
+              - { name: "slug", label: "Slug URL (no cambiar)", widget: "string" }
+              - { name: "orden", label: "Orden en Home (1, 2, 3…)", widget: "number", value_type: "int" }
+
+          - name: "tarjeta_inicio"
+            label: "Tarjeta en la página de Inicio"
+            widget: "object"
+            fields:
+              - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+              - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+              - { name: "mini_descripcion_es", label: "Mini descripción (ES)", widget: "text" }
+              - { name: "mini_descripcion_en", label: "Mini description (EN)", widget: "text" }
+              - { name: "imagen_fondo_tarjeta", label: "Imagen de fondo tarjeta", widget: "image" }
+              - { name: "alt_es", label: "Alt de imagen (ES)", widget: "string", required: false }
+              - { name: "alt_en", label: "Image alt (EN)", widget: "string", required: false }
+
+          - name: "pagina_interna"
+            label: "Página interna del servicio"
+            widget: "object"
+            fields:
+              - { name: "hero_titulo_es", label: "Título del Hero (ES)", widget: "string" }
+              - { name: "hero_titulo_en", label: "Hero title (EN)", widget: "string" }
+              - { name: "hero_imagen_fondo", label: "Imagen de fondo del Hero", widget: "image" }
+              - { name: "introduccion_es", label: "Introducción (ES)", widget: "text" }
+              - { name: "introduccion_en", label: "Introduction (EN)", widget: "text" }
+              - name: "bloques_contenido"
+                label: "Bloques de contenido (tarjetas de servicios)"
+                widget: "list"
+                required: false
+                fields:
+                  - { name: "titulo_es", label: "Título (ES)", widget: "string" }
+                  - { name: "titulo_en", label: "Title (EN)", widget: "string" }
+                  - { name: "texto_es", label: "Texto (ES)", widget: "text" }
+                  - { name: "texto_en", label: "Text (EN)", widget: "text" }
+              - name: "seccion_faq"
+                label: "FAQ — Preguntas frecuentes"
+                widget: "list"
+                required: false
+                fields:
+                  - { name: "pregunta_es", label: "Pregunta (ES)", widget: "string" }
+                  - { name: "pregunta_en", label: "Question (EN)", widget: "string" }
+                  - { name: "respuesta_es", label: "Respuesta (ES)", widget: "text" }
+                  - { name: "respuesta_en", label: "Answer (EN)", widget: "text" }
