@@ -1,0 +1,114 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsAppWidget from '../../components/WhatsAppWidget.astro';
+
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter(p => p.data.language === 'en')
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+---
+
+<Layout
+  title="Legal Blog | Immigration, Trademark & Corporate Law in Colombia — RH Legal Services"
+  description="Specialized articles on immigration law, trademark registration, and corporate law in Colombia. Legal guidance for foreigners and investors."
+  lang="en"
+  canonicalEs="/blog"
+  canonicalEn="/en/blog"
+  ogImage="https://rhlegalservices.com/images/legal-library.jpg"
+  lcpImage="/images/legal-library.jpg"
+>
+  <Navbar lang="en" currentPath="/en/blog" />
+
+  <!-- Hero -->
+  <section class="relative min-h-[40vh] flex items-end pb-14">
+    <img src="/images/legal-library.jpg" alt="R&H Legal Services" fetchpriority="high" loading="eager" class="absolute inset-0 w-full h-full object-cover object-top -z-10" />
+    <div class="absolute inset-0 bg-navy-950/75"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-transparent"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 w-full">
+      <div class="inline-flex items-center gap-2 bg-brand-500/20 border border-brand-400/30 rounded-full px-4 py-1.5 mb-5">
+        <span class="text-brand-300 text-xs font-semibold tracking-wider uppercase">Legal Blog</span>
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight mb-4">
+        Legal guidance for <span class="text-brand-300">foreigners in Colombia</span>
+      </h1>
+      <p class="text-white/70 text-lg max-w-2xl leading-relaxed">
+        Specialized articles on visas, trademark registration, and corporate law, written by our attorneys.
+      </p>
+    </div>
+  </section>
+
+  <!-- Blog grid -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {posts.length === 0 ? (
+        <p class="text-gray-500 text-center py-20">No articles available yet.</p>
+      ) : (
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {posts.map(post => {
+            const date = new Intl.DateTimeFormat('en-US', {
+              year: 'numeric', month: 'long', day: 'numeric',
+            }).format(post.data.pubDate);
+            return (
+              <article class="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-brand-200 hover:shadow-2xl hover:shadow-brand-500/10 transition-all duration-300 flex flex-col">
+                <a href={`/blog/${post.slug}`} class="block overflow-hidden h-52">
+                  <img
+                    src={post.data.image}
+                    alt={post.data.imageAlt ?? post.data.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    width="600"
+                    height="208"
+                  />
+                </a>
+                <div class="p-6 flex flex-col flex-1">
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xs font-bold text-brand-500 uppercase tracking-wide">
+                      {post.data.category}
+                    </span>
+                    <time class="text-xs text-gray-400">{date}</time>
+                  </div>
+                  <h2 class="text-lg font-bold text-navy-900 leading-snug mb-3 group-hover:text-brand-600 transition-colors">
+                    <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+                  </h2>
+                  <p class="text-gray-500 text-sm leading-relaxed mb-5 flex-1">{post.data.description}</p>
+                  <a
+                    href={`/blog/${post.slug}`}
+                    class="inline-flex items-center gap-1 text-brand-500 font-semibold text-sm hover:text-brand-600 transition-colors"
+                  >
+                    Read article
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-gradient-to-br from-brand-600 to-accent-600">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+      <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Have a specific legal question?</h2>
+      <p class="text-white/80 mb-8">Our attorneys are ready to review your case and guide you.</p>
+      <a
+        href="/en/#contact"
+        class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-brand-600 font-bold px-8 py-4 rounded-xl text-sm transition-all duration-200 shadow-2xl hover:-translate-y-0.5"
+      >
+        Contact an attorney
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <Footer lang="en" />
+  <WhatsAppWidget lang="en" page="home" />
+</Layout>

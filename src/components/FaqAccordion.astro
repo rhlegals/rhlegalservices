@@ -1,0 +1,62 @@
+---
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface Props {
+  items: FaqItem[];
+  title?: string;
+}
+
+const { items, title } = Astro.props;
+---
+
+<section class="py-16 bg-gray-50">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    {title && (
+      <h2 class="text-2xl sm:text-3xl font-bold text-navy-900 text-center mb-10">{title}</h2>
+    )}
+    <div class="space-y-3">
+      {items.map((item, i) => (
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <input
+            type="checkbox"
+            id={`faq-${i}`}
+            class="peer sr-only"
+            aria-controls={`faq-panel-${i}`}
+          />
+          <label
+            for={`faq-${i}`}
+            class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer hover:bg-gray-50 transition-colors"
+            aria-expanded="false"
+          >
+            <h3 class="text-sm sm:text-base font-semibold text-navy-900 leading-snug">{item.question}</h3>
+            <svg
+              class="w-5 h-5 text-brand-500 flex-shrink-0 transition-transform duration-300 peer-checked:rotate-180"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </label>
+          <div
+            id={`faq-panel-${i}`}
+            class="max-h-0 overflow-hidden transition-all duration-300 peer-checked:max-h-96"
+          >
+            <div class="px-6 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
+              <Fragment set:html={item.answer} />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  input[type="checkbox"]:checked + label svg {
+    transform: rotate(180deg);
+  }
+</style>

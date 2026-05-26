@@ -1,0 +1,55 @@
+siteLogo:
+  image: "/RH_Legal_Services.webp"
+  alt: "R&H Legal Services"
+contact:
+  email: "contacto@rhlegalservices.com"
+  phoneOffice: "+57 (601) 123-4567"
+  address: "Bogotá, Colombia"
+  addressEn: "Bogota, Colombia"
+theme:
+  headerBgLight: "bg-white shadow-md"
+  headerBgDarkActive: "bg-navy-950/95 backdrop-blur-md shadow-xl"
+  mobileMenuBg: "bg-navy-900/95 backdrop-blur-md border-t border-white/10"
+  footerBg: "bg-navy-900"
+whatsapp:
+  phone: "573002170870"
+  prefilledMessages:
+    home:
+      es: "Hola, me interesa conocer más sobre sus servicios legales en Colombia."
+      en: "Hello, I am interested in learning more about your legal services in Colombia."
+    immigration:
+      es: "Hola, necesito información sobre visas y trámites migratorios en Colombia."
+      en: "Hello, I need information about visas and immigration procedures in Colombia."
+    trademark:
+      es: "Hola, quiero registrar una marca en Colombia y necesito asesoría."
+      en: "Hello, I want to register a trademark in Colombia and need advice."
+    other:
+      es: "Hola, quisiera información sobre sus servicios legales."
+      en: "Hello, I would like information about your legal services."
+navigation:
+  es:
+    - href: "/"
+      label: "Inicio"
+    - href: "/nuestra-firma"
+      label: "Nuestra Firma"
+    - href: "/derecho-marcario"
+      label: "Derecho Marcario"
+    - href: "/derecho-migratorio"
+      label: "Derecho Migratorio"
+    - href: "/otros-servicios"
+      label: "Derecho Corporativo"
+    - href: "/blog"
+      label: "Blog"
+  en:
+    - href: "/en/"
+      label: "Home"
+    - href: "/en/our-firm"
+      label: "Our Firm"
+    - href: "/en/trademark-law"
+      label: "Trademark Law"
+    - href: "/en/immigration-law"
+      label: "Immigration Law"
+    - href: "/en/other-services"
+      label: "Corporate Law"
+    - href: "/en/blog"
+      label: "Blog"

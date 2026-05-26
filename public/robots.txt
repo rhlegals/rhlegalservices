@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Block success/confirmation pages
+Disallow: /gracias
+Disallow: /en/thank-you
+
+Sitemap: https://rhlegalservices.com/sitemap-index.xml

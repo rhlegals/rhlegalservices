@@ -1,0 +1,107 @@
+---
+import '../styles/fonts.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  lang: 'es' | 'en';
+  canonicalEs: string;
+  canonicalEn: string;
+  ogImage?: string;
+  navDark?: boolean;
+  lcpImage?: string;
+}
+
+const {
+  title,
+  description,
+  lang,
+  canonicalEs,
+  canonicalEn,
+  ogImage = 'https://rhlegalservices.com/images/office-team.jpg',
+  navDark = false,
+  lcpImage,
+} = Astro.props;
+
+const canonical = lang === 'es' ? canonicalEs : canonicalEn;
+const siteUrl = 'https://rhlegalservices.com';
+const GTM_ID = 'GTM-32261005';
+const RECAPTCHA_SITE_KEY = '6LcCHW8sAAAAACGziCTfuXYba_GT7fEhci1TBmf5';
+---
+
+<!doctype html>
+<html lang={lang} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={`${siteUrl}${canonical}`} />
+
+    <!-- LCP image preload — must be first resource hint for lowest LCP -->
+    {lcpImage && <link rel="preload" as="image" href={lcpImage} fetchpriority="high" />}
+
+    <!-- Sitemap -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- hreflang bilingual SEO -->
+    <link rel="alternate" hreflang="es" href={`${siteUrl}${canonicalEs}`} />
+    <link rel="alternate" hreflang="en" href={`${siteUrl}${canonicalEn}`} />
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}${canonicalEs}`} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={`${siteUrl}${canonical}`} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_CO' : 'en_US'} />
+    <meta property="og:site_name" content="RH Legal Services" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" type="image/webp" href="/icono-rh-legal-services.webp" />
+    <link rel="shortcut icon" href="/icono-rh-legal-services.webp" />
+  </head>
+  <body class="font-sans bg-white text-navy-900 antialiased">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe>
+    </noscript>
+
+    <slot />
+
+    <script is:inline set:html={`
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+      var f = document.getElementsByTagName('script')[0],
+          j = document.createElement('script');
+      j.async = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-32261005';
+      f.parentNode.insertBefore(j, f);
+    `} />
+
+    <script is:inline set:html={`
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var s = document.createElement('script');
+          s.src = 'https://www.google.com/recaptcha/api.js?render=6LcCHW8sAAAAACGziCTfuXYba_GT7fEhci1TBmf5';
+          s.async = true;
+          s.defer = true;
+          document.head.appendChild(s);
+        }, 2500);
+      });
+    `} />
+  </body>
+</html>

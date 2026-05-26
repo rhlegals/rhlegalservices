@@ -1,0 +1,135 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsAppWidget from '../../components/WhatsAppWidget.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const isEs = post.data.language === 'es';
+
+const formattedDate = new Intl.DateTimeFormat(isEs ? 'es-CO' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(post.data.pubDate);
+
+const canonicalSlug = post.slug;
+---
+
+<Layout
+  title={`${post.data.title} — RH Legal Services`}
+  description={post.data.description}
+  lang={post.data.language}
+  canonicalEs={isEs ? `/blog/${canonicalSlug}` : `/blog/${canonicalSlug}`}
+  canonicalEn={isEs ? `/blog/${canonicalSlug}` : `/blog/${canonicalSlug}`}
+  ogImage={post.data.image}
+>
+  <Navbar lang={post.data.language} currentPath={`/blog/${post.slug}`} />
+
+  <main class="pt-24 pb-20">
+    <!-- Hero image -->
+    <div class="relative h-72 sm:h-96 overflow-hidden">
+      <img
+        src={post.data.image}
+        alt={post.data.imageAlt ?? post.data.title}
+        class="w-full h-full object-cover"
+        loading="eager"
+        width="1600"
+        height="600"
+      />
+      <div class="absolute inset-0 bg-navy-950/65"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-transparent"></div>
+      <div class="absolute bottom-0 left-0 right-0 max-w-3xl mx-auto px-4 sm:px-6 pb-10">
+        <div class="mb-4">
+          <span class="text-brand-400 text-xs font-bold tracking-wider uppercase">{post.data.category}</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
+          {post.data.title}
+        </h1>
+      </div>
+    </div>
+
+    <!-- Article meta + content -->
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+      <!-- Meta bar -->
+      <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-10 pb-8 border-b border-gray-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center">
+            <span class="text-white text-xs font-bold">
+              {post.data.author.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
+            </span>
+          </div>
+          <span class="font-bold text-navy-900">{post.data.author}</span>
+        </div>
+        <span class="text-gray-300">·</span>
+        <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+        <span class="text-gray-300">·</span>
+        <span class="text-xs font-bold text-brand-500 uppercase tracking-wide">
+          {post.data.category}
+        </span>
+      </div>
+
+      <!-- Article body -->
+      <article class="prose prose-lg prose-navy max-w-none
+        prose-headings:font-bold prose-headings:text-navy-900
+        prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+        prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+        prose-p:font-normal prose-p:text-gray-600 prose-p:leading-relaxed prose-p:mb-5
+        prose-a:text-brand-500 prose-a:no-underline hover:prose-a:underline
+        prose-strong:text-navy-900
+        prose-blockquote:border-l-brand-500 prose-blockquote:bg-brand-50/50 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:not-italic
+        prose-table:text-sm prose-th:bg-navy-900 prose-th:text-white prose-th:px-4 prose-th:py-2
+        prose-td:px-4 prose-td:py-2 prose-td:border prose-td:border-gray-200
+        prose-li:text-gray-600
+        prose-hr:border-gray-200
+      ">
+        <Content />
+      </article>
+
+      <!-- Back link -->
+      <div class="mt-14 pt-8 border-t border-gray-100 flex items-center justify-between flex-wrap gap-4">
+        <a
+          href={isEs ? '/blog' : '/en/blog'}
+          class="inline-flex items-center gap-2 text-brand-500 font-bold hover:text-brand-600 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          {isEs ? 'Volver al Blog' : 'Back to Blog'}
+        </a>
+        <a
+          href={isEs ? '/nuestra-firma#contacto' : '/en/our-firm#contact'}
+          class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold px-5 py-2.5 rounded-xl transition-all duration-200 shadow-md hover:-translate-y-0.5"
+        >
+          {isEs ? 'Consultar con un abogado' : 'Speak with an attorney'}
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <Footer lang={post.data.language} />
+  <WhatsAppWidget lang={post.data.language} page="home" />
+</Layout>
+
+<style is:global>
+  .prose blockquote p {
+    margin: 0;
+  }
+  .prose table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+</style>

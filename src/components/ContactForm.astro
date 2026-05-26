@@ -1,0 +1,264 @@
+---
+export interface Props {
+  lang: 'es' | 'en';
+  formId?: string;
+  successUrl?: string;
+  compact?: boolean;
+}
+
+const { lang, formId = 'contact-form', successUrl, compact = false } = Astro.props;
+const isEs = lang === 'es';
+
+const defaultSuccess = isEs ? '/gracias' : '/en/thank-you';
+const redirectUrl = successUrl ?? defaultSuccess;
+
+const RECAPTCHA_SITE_KEY = '6LcCHW8sAAAAACGziCTfuXYba_GT7fEhci1TBmf5';
+
+const t = {
+  name: isEs ? 'Nombre completo' : 'Full name',
+  email: isEs ? 'Correo electrónico' : 'Email address',
+  phone: isEs ? 'Celular / WhatsApp' : 'Phone / WhatsApp',
+  service: isEs ? 'Servicio de interés' : 'Service of interest',
+  serviceOptions: isEs
+    ? [
+        { value: '', label: 'Selecciona una opción...' },
+        { value: 'marca', label: 'Registro de Marca' },
+        { value: 'visa', label: 'Visa en Colombia' },
+        { value: 'corporativo', label: 'Derecho Corporativo / Comercial' },
+        { value: 'civil', label: 'Asuntos Civiles / Otros' },
+      ]
+    : [
+        { value: '', label: 'Select an option...' },
+        { value: 'marca', label: 'Trademark Registration' },
+        { value: 'visa', label: 'Visa in Colombia' },
+        { value: 'corporativo', label: 'Corporate / Commercial Law' },
+        { value: 'civil', label: 'Civil Matters / Other' },
+      ],
+  privacy: isEs
+    ? 'Autorizo el tratamiento de mis datos personales de acuerdo con la'
+    : 'I authorize the processing of my personal data in accordance with the',
+  privacyLink: isEs ? 'política de privacidad' : 'privacy policy',
+  privacyHref: isEs ? '/politica-privacidad' : '/en/privacy-policy',
+  submit: isEs ? 'Solicitar Información' : 'Request Information',
+  errRequired: isEs ? 'Por favor completa todos los campos obligatorios.' : 'Please fill in all required fields.',
+  errPrivacy: isEs ? 'Debes aceptar la política de privacidad para continuar.' : 'You must accept the privacy policy to continue.',
+  errService: isEs ? 'Por favor selecciona un servicio de interés.' : 'Please select a service of interest.',
+};
+---
+
+<form
+  id={formId}
+  method="POST"
+  action="enviar.php"
+  class={`bg-white rounded-2xl shadow-2xl ${compact ? 'p-5' : 'p-8'}`}
+  novalidate
+  data-lang={lang}
+>
+  <!-- Honeypot anti-spam -->
+  <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
+    <label for={`${formId}-hp`}>Leave this field blank</label>
+    <input type="text" id={`${formId}-hp`} name="website" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <input type="hidden" name="redirect_url" value={redirectUrl} />
+  <input type="hidden" name="g-recaptcha-response" id={`${formId}-recaptcha`} />
+
+  <!-- Error banner -->
+  <div
+    id={`${formId}-error`}
+    class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs leading-relaxed"
+    role="alert"
+  ></div>
+
+  <div class={`space-y-${compact ? '3' : '5'}`}>
+    <!-- Name -->
+    <div>
+      <label for={`${formId}-name`} class={`block font-semibold text-navy-800 mb-1 ${compact ? 'text-xs' : 'text-sm'}`}>
+        {t.name} <span class="text-brand-500">*</span>
+      </label>
+      <input
+        type="text"
+        id={`${formId}-name`}
+        name="nombre"
+        required
+        autocomplete="name"
+        placeholder={isEs ? 'Ej. María García' : 'e.g. John Smith'}
+        class={`w-full px-3 border border-gray-200 rounded-lg text-navy-900 placeholder-gray-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all ${compact ? 'py-2.5 text-sm' : 'py-3 text-sm'}`}
+      />
+    </div>
+
+    <!-- Email -->
+    <div>
+      <label for={`${formId}-email`} class={`block font-semibold text-navy-800 mb-1 ${compact ? 'text-xs' : 'text-sm'}`}>
+        {t.email} <span class="text-brand-500">*</span>
+      </label>
+      <input
+        type="email"
+        id={`${formId}-email`}
+        name="email"
+        required
+        autocomplete="email"
+        placeholder={isEs ? 'tu@correo.com' : 'your@email.com'}
+        class={`w-full px-3 border border-gray-200 rounded-lg text-navy-900 placeholder-gray-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all ${compact ? 'py-2.5 text-sm' : 'py-3 text-sm'}`}
+      />
+    </div>
+
+    <!-- Phone -->
+    <div>
+      <label for={`${formId}-phone`} class={`block font-semibold text-navy-800 mb-1 ${compact ? 'text-xs' : 'text-sm'}`}>
+        {t.phone} <span class="text-brand-500">*</span>
+      </label>
+      <input
+        type="tel"
+        id={`${formId}-phone`}
+        name="celular"
+        required
+        autocomplete="tel"
+        placeholder="+57 300 000 0000"
+        class={`w-full px-3 border border-gray-200 rounded-lg text-navy-900 placeholder-gray-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all ${compact ? 'py-2.5 text-sm' : 'py-3 text-sm'}`}
+      />
+    </div>
+
+    <!-- Service dropdown -->
+    <div>
+      <label for={`${formId}-service`} class={`block font-semibold text-navy-800 mb-1 ${compact ? 'text-xs' : 'text-sm'}`}>
+        {t.service} <span class="text-brand-500">*</span>
+      </label>
+      <select
+        id={`${formId}-service`}
+        name="servicio"
+        required
+        class={`w-full px-3 border border-gray-200 rounded-lg text-navy-900 bg-white focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNCA2TDggMTBMMTIgNiIgc3Ryb2tlPSIjNjY3MTg1IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+')] bg-no-repeat bg-[right_12px_center] ${compact ? 'py-2.5 text-sm' : 'py-3 text-sm'}`}
+      >
+        {t.serviceOptions.map(opt => (
+          <option value={opt.value} disabled={opt.value === ''} selected={opt.value === ''}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Privacy consent -->
+    <div class="flex items-start gap-3 pt-1">
+      <input
+        type="checkbox"
+        id={`${formId}-privacy`}
+        name="acepta_privacidad"
+        value="si"
+        required
+        class="mt-0.5 w-4 h-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500 flex-shrink-0 cursor-pointer"
+      />
+      <label for={`${formId}-privacy`} class="text-xs text-gray-500 leading-relaxed cursor-pointer">
+        {t.privacy}{' '}
+        <a href={t.privacyHref} class="text-brand-500 underline hover:text-brand-600" target="_blank">
+          {t.privacyLink}
+        </a>.
+      </label>
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      style="background-color:#A61A32;"
+      class={`w-full hover:opacity-90 text-white font-bold px-6 rounded-xl transition-all duration-200 shadow-lg hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed ${compact ? 'py-3 text-sm' : 'py-4 text-sm'}`}
+    >
+      <span class="btn-label">{t.submit}</span>
+    </button>
+  </div>
+</form>
+
+<script define:vars={{ formId, redirectUrl, RECAPTCHA_SITE_KEY, errRequired: t.errRequired, errPrivacy: t.errPrivacy, errService: t.errService }}>
+  const form = document.getElementById(formId);
+  if (!form) return;
+
+  const errorBanner = document.getElementById(`${formId}-error`);
+
+  function showError(msg) {
+    if (!errorBanner) return;
+    errorBanner.textContent = msg;
+    errorBanner.classList.remove('hidden');
+    errorBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function hideError() {
+    if (errorBanner) errorBanner.classList.add('hidden');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideError();
+
+    // Honeypot check
+    const honeypot = form.querySelector('[name="website"]');
+    if (honeypot && honeypot.value) return;
+
+    // Strict field validation
+    const nombre = form.querySelector('[name="nombre"]');
+    const email = form.querySelector('[name="email"]');
+    const celular = form.querySelector('[name="celular"]');
+    const servicio = form.querySelector('[name="servicio"]');
+    const privacy = form.querySelector('[name="acepta_privacidad"]');
+
+    const nameVal = nombre ? nombre.value.trim() : '';
+    const emailVal = email ? email.value.trim() : '';
+    const phoneVal = celular ? celular.value.trim() : '';
+    const serviceVal = servicio ? servicio.value : '';
+    const privacyChecked = privacy ? privacy.checked : false;
+
+    if (!nameVal || !emailVal || !phoneVal) {
+      showError(errRequired);
+      (nameVal ? (emailVal ? celular : email) : nombre).focus();
+      return;
+    }
+
+    // Basic email format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+      showError(errRequired);
+      email.focus();
+      return;
+    }
+
+    if (!serviceVal) {
+      showError(errService);
+      servicio.focus();
+      return;
+    }
+
+    if (!privacyChecked) {
+      showError(errPrivacy);
+      privacy.focus();
+      return;
+    }
+
+    // Disable button
+    const btn = form.querySelector('button[type="submit"]');
+    const label = form.querySelector('.btn-label');
+    if (btn) btn.setAttribute('disabled', 'true');
+    const lang = form.dataset.lang;
+    if (label) label.textContent = lang === 'en' ? 'Sending...' : 'Enviando...';
+
+    try {
+      // Execute reCAPTCHA v3
+      await new Promise((resolve) => {
+        if (typeof grecaptcha !== 'undefined') {
+          grecaptcha.ready(async () => {
+            try {
+              const token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'submit_form' });
+              const recaptchaInput = document.getElementById(`${formId}-recaptcha`);
+              if (recaptchaInput) recaptchaInput.value = token;
+            } catch (_) {}
+            resolve();
+          });
+        } else {
+          resolve();
+        }
+      });
+
+      const data = new FormData(form);
+      await fetch(form.action, { method: 'POST', body: data });
+      window.location.href = redirectUrl;
+    } catch (_) {
+      window.location.href = redirectUrl;
+    }
+  });
+</script>

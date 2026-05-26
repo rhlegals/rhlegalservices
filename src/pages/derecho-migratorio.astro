@@ -1,0 +1,220 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import ContactForm from '../components/ContactForm.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+const servicio = await getEntry('servicios', 'derecho-migratorio');
+if (!servicio) {
+  throw new Error("No se pudo cargar 'src/content/servicios/derecho-migratorio.yaml'. Verifica que el archivo exista y que la colección esté registrada en config.ts.");
+}
+const pi = servicio.data.pagina_interna;
+
+const faqItems = (pi.seccion_faq ?? []).map(f => ({
+  question: f.pregunta_es,
+  answer: f.respuesta_es,
+}));
+
+const pasos = pi.bloques_contenido ?? [];
+---
+
+<Layout
+  title="Derecho Migratorio en Colombia | Visas de Residencia, Trabajo e Inversión — RH Legal Services"
+  description="Abogados expertos en visas Colombia: visa de residencia, trabajo, inversión y nómada digital. Proceso seguro, sin errores ni demoras. Consulta gratis hoy."
+  lang="es"
+  canonicalEs="/derecho-migratorio"
+  canonicalEn="/en/immigration-law"
+  ogImage="https://rhlegalservices.com/images/immigration-passport.jpg"
+  lcpImage="/images/immigration-passport.jpg"
+>
+  <Navbar lang="es" currentPath="/derecho-migratorio" />
+
+  <!-- ── HERO ── -->
+  <section class="relative min-h-[70vh] flex items-center" id="inicio">
+    <img src={pi.hero_imagen_fondo} alt="R&H Legal Services" fetchpriority="high" loading="eager" class="absolute inset-0 w-full h-full object-cover -z-10" />
+    <div class="absolute inset-0 bg-navy-950/75"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 w-full">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 bg-brand-500/20 border border-brand-400/30 rounded-full px-4 py-1.5 mb-6">
+          <span class="text-brand-300 text-xs font-semibold tracking-wider uppercase">Derecho Migratorio</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight mb-5">
+          {pi.hero_titulo_es.split(',')[0]},<br />
+          <span class="text-brand-300">{pi.hero_titulo_es.split(',').slice(1).join(',').trim()}</span>
+        </h1>
+        <p class="text-white/80 text-lg leading-relaxed mb-8">
+          {pi.introduccion_es}
+        </p>
+        <a href="#contacto" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold px-7 py-4 rounded-xl transition-all duration-200 shadow-xl hover:-translate-y-0.5">
+          Consulta tu caso ahora
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── IDENTIFICACIÓN: "Este servicio es para ti si..." ── -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <span class="text-brand-500 text-xs font-bold uppercase tracking-widest">Perfil de cliente ideal</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-navy-900 mt-3 mb-4">Este servicio es para ti si...</h2>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
+        {[
+          'Quieres vivir legalmente en Colombia de forma permanente o temporal.',
+          'Tienes una oferta de trabajo y necesitas regularizar tu estatus migratorio.',
+          'Planeas invertir capital en Colombia y quieres una visa de inversionista.',
+          'Eres nómada digital o freelancer y buscas la visa adecuada para tu perfil.',
+          'Tu visa está próxima a vencer y necesitas renovarla sin riesgos.',
+          'Tu solicitud fue rechazada anteriormente y quieres reintentarlo correctamente.',
+          'Quieres traer a tu familia y solicitar visa de reunificación familiar.',
+          'Buscas un abogado que te asesore en inglés o español con claridad total.',
+        ].map(item => (
+          <div class="flex items-start gap-4 p-5 rounded-xl bg-gray-50 border border-gray-100 hover:border-brand-300 hover:bg-brand-50/50 transition-all">
+            <div class="w-6 h-6 rounded-full bg-brand-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p class="text-navy-800 text-sm leading-relaxed">{item}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── P.A.S: PROBLEMA ── -->
+  <section class="py-20 bg-navy-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <span class="text-brand-400 text-xs font-bold uppercase tracking-widest">Los riesgos de hacerlo solo</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mt-3 mb-6">¿Sabes qué pasa cuando la documentación está mal?</h2>
+          <div class="space-y-5">
+            {[
+              {
+                title: 'Rechazo inmediato y costoso',
+                desc: 'Un solo documento incorrecto o extemporáneo puede causar el rechazo de toda tu solicitud, perdiendo el tiempo y las tasas pagadas.',
+              },
+              {
+                title: 'Multas por permanencia irregular',
+                desc: 'Estar en Colombia sin el estatus migratorio correcto genera multas diarias y puede resultar en deportación con prohibición de reingreso.',
+              },
+              {
+                title: 'Plazos legales que no esperan',
+                desc: 'El sistema migratorio colombiano tiene ventanas de tiempo muy específicas. Un día de retraso puede cerrar tu posibilidad de solicitud.',
+              },
+              {
+                title: 'Información desactualizada en internet',
+                desc: 'Las normas migratorias cambian constantemente. Seguir guías desactualizadas de foros es una de las causas más comunes de rechazo.',
+              },
+            ].map(r => (
+              <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-lg bg-brand-500/20 border border-brand-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5C2.57 18.333 3.532 20 5.072 20z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-white font-semibold text-sm mb-1">{r.title}</p>
+                  <p class="text-white/80 text-sm leading-relaxed">{r.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <span class="text-brand-300 text-xs font-bold uppercase tracking-widest">La solución</span>
+          <h3 class="text-2xl font-bold text-white mt-3 mb-6">Nuestro proceso garantiza tu tranquilidad</h3>
+          <div class="space-y-4">
+            {pasos.map((s, i) => (
+              <div class="flex gap-4 p-5 bg-white/5 rounded-xl border border-white/10">
+                <div class="text-brand-300 font-bold text-2xl flex-shrink-0">{String(i + 1).padStart(2, '0')}</div>
+                <div>
+                  <p class="text-white font-semibold text-sm mb-1">{s.titulo_es}</p>
+                  <p class="text-white/80 text-sm">{s.texto_es}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TIPOS DE VISA ── -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <h2 class="text-3xl font-bold text-navy-900 mb-4">Visas que gestionamos</h2>
+        <p class="text-gray-500 max-w-xl mx-auto">Abarcamos la mayoría de categorías del sistema migratorio colombiano vigente.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {[
+          { title: 'Visa V — Visitante', desc: 'Trabajo, negocios, inversión temporal y prácticas profesionales.' },
+          { title: 'Visa M — Migrante', desc: 'Para residencia a mediano plazo por trabajo, familia o actividad económica.' },
+          { title: 'Visa R — Residente', desc: 'Residencia permanente en Colombia por acumulación de tiempo o criterios especiales.' },
+          { title: 'Visa de Inversionista', desc: 'Para extranjeros que invierten capital en empresas o finca raíz en Colombia.' },
+          { title: 'Visa de Nómada Digital', desc: 'Especialmente diseñada para trabajadores remotos y freelancers internacionales.' },
+          { title: 'Reunificación Familiar', desc: 'Reúne a tu familia en Colombia bajo una base migratoria sólida y legal.' },
+        ].map(v => (
+          <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:border-brand-300 hover:shadow-lg transition-all">
+            <div class="w-10 h-10 rounded-lg bg-navy-100 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-navy-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 class="font-semibold text-navy-900 mb-2">{v.title}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">{v.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <FaqAccordion
+    title="Preguntas frecuentes sobre visas y migración en Colombia"
+    items={faqItems}
+  />
+
+  <!-- ── FORMULARIO ── -->
+  <section class="py-20 bg-gradient-to-br from-navy-900 to-navy-950" id="contacto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-5">Inicia tu proceso migratorio hoy</h2>
+          <p class="text-white/70 leading-relaxed mb-8">Cuéntanos tu caso y nuestro equipo te dará un diagnóstico claro sobre la visa más adecuada para ti.</p>
+          <div class="space-y-4">
+            {[
+              'Diagnóstico de elegibilidad sin costo',
+              'Revisión de documentación existente',
+              'Propuesta clara de honorarios',
+              'Respuesta en menos de 24 horas hábiles',
+            ].map(b => (
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-brand-500 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-white/80 text-sm">{b}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <ContactForm lang="es" formId="mig-form" />
+      </div>
+    </div>
+  </section>
+
+  <Footer lang="es" />
+  <WhatsAppWidget lang="es" page="immigration" />
+</Layout>

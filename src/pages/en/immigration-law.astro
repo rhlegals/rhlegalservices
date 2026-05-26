@@ -1,0 +1,220 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import FaqAccordion from '../../components/FaqAccordion.astro';
+import WhatsAppWidget from '../../components/WhatsAppWidget.astro';
+
+const servicio = await getEntry('servicios', 'derecho-migratorio');
+if (!servicio) {
+  throw new Error("Could not load 'src/content/servicios/derecho-migratorio.yaml'. Verify the file exists and the collection is registered in config.ts.");
+}
+const pi = servicio.data.pagina_interna;
+
+const faqItems = (pi.seccion_faq ?? []).map(f => ({
+  question: f.pregunta_en,
+  answer: f.respuesta_en,
+}));
+
+const pasos = pi.bloques_contenido ?? [];
+---
+
+<Layout
+  title="Immigration Law in Colombia | Residence, Work & Investor Visas — RH Legal Services"
+  description="Expert immigration attorneys for Colombia visas: residence, work, investment, and digital nomad visas. Secure process, no errors or delays. Free consultation."
+  lang="en"
+  canonicalEs="/derecho-migratorio"
+  canonicalEn="/en/immigration-law"
+  ogImage="https://rhlegalservices.com/images/immigration-passport.jpg"
+  lcpImage="/images/immigration-passport.jpg"
+>
+  <Navbar lang="en" currentPath="/en/immigration-law" />
+
+  <!-- ── HERO ── -->
+  <section class="relative min-h-[70vh] flex items-center">
+    <img src={pi.hero_imagen_fondo} alt="R&H Legal Services" fetchpriority="high" loading="eager" class="absolute inset-0 w-full h-full object-cover -z-10" />
+    <div class="absolute inset-0 bg-navy-950/75"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 w-full">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 bg-brand-500/20 border border-brand-400/30 rounded-full px-4 py-1.5 mb-6">
+          <span class="text-brand-300 text-xs font-semibold tracking-wider uppercase">Immigration Law</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight mb-5">
+          {pi.hero_titulo_en.split(',')[0]},<br />
+          <span class="text-brand-300">{pi.hero_titulo_en.split(',').slice(1).join(',').trim()}</span>
+        </h1>
+        <p class="text-white/80 text-lg leading-relaxed mb-8">
+          {pi.introduccion_en}
+        </p>
+        <a href="#contact" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold px-7 py-4 rounded-xl transition-all duration-200 shadow-xl hover:-translate-y-0.5">
+          Consult your case now
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── IDENTIFICATION ── -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <span class="text-brand-500 text-xs font-bold uppercase tracking-widest">Ideal Client Profile</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-navy-900 mt-3 mb-4">This service is for you if...</h2>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
+        {[
+          'You want to live legally in Colombia on a permanent or temporary basis.',
+          'You have a job offer and need to regularize your immigration status.',
+          'You plan to invest capital in Colombia and want an investor visa.',
+          'You are a digital nomad or freelancer looking for the right visa for your profile.',
+          'Your visa is about to expire and you need to renew it without risks.',
+          'Your previous application was rejected and you want to try again correctly.',
+          'You want to bring your family and apply for a family reunification visa.',
+          'You need an attorney who advises you in English with total clarity.',
+        ].map(item => (
+          <div class="flex items-start gap-4 p-5 rounded-xl bg-gray-50 border border-gray-100 hover:border-brand-300 hover:bg-brand-50/50 transition-all">
+            <div class="w-6 h-6 rounded-full bg-brand-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p class="text-navy-800 text-sm leading-relaxed">{item}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── P.A.S: PROBLEM ── -->
+  <section class="py-20 bg-navy-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <span class="text-brand-400 text-xs font-bold uppercase tracking-widest">The risks of going it alone</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mt-3 mb-6">What happens when your documentation is wrong?</h2>
+          <div class="space-y-5">
+            {[
+              {
+                title: 'Immediate and costly rejection',
+                desc: 'A single incorrect or untimely document can cause the rejection of your entire application, losing time and fees paid.',
+              },
+              {
+                title: 'Fines for irregular status',
+                desc: 'Being in Colombia without the correct immigration status generates daily fines and may result in deportation with a re-entry ban.',
+              },
+              {
+                title: "Legal deadlines don't wait",
+                desc: 'The Colombian immigration system has very specific time windows. One day late can close your application window entirely.',
+              },
+              {
+                title: 'Outdated information online',
+                desc: 'Immigration rules change constantly. Following outdated forum guides is one of the most common causes of rejection.',
+              },
+            ].map(r => (
+              <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-lg bg-brand-500/20 border border-brand-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5C2.57 18.333 3.532 20 5.072 20z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-white font-semibold text-sm mb-1">{r.title}</p>
+                  <p class="text-white/80 text-sm leading-relaxed">{r.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <span class="text-brand-300 text-xs font-bold uppercase tracking-widest">The solution</span>
+          <h3 class="text-2xl font-bold text-white mt-3 mb-6">Our process guarantees your peace of mind</h3>
+          <div class="space-y-4">
+            {pasos.map((s, i) => (
+              <div class="flex gap-4 p-5 bg-white/5 rounded-xl border border-white/10">
+                <div class="text-brand-300 font-bold text-2xl flex-shrink-0">{String(i + 1).padStart(2, '0')}</div>
+                <div>
+                  <p class="text-white font-semibold text-sm mb-1">{s.titulo_en}</p>
+                  <p class="text-white/80 text-sm">{s.texto_en}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VISA TYPES ── -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <h2 class="text-3xl font-bold text-navy-900 mb-4">Visa categories we handle</h2>
+        <p class="text-gray-500 max-w-xl mx-auto">We cover most categories of the current Colombian immigration system.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {[
+          { title: 'V Visa — Visitor', desc: 'Work, business, temporary investment, and professional internships.' },
+          { title: 'M Visa — Migrant', desc: 'For medium-term residence through work, family ties, or economic activity.' },
+          { title: 'R Visa — Resident', desc: 'Permanent residency in Colombia by accumulated time or special criteria.' },
+          { title: 'Investor Visa', desc: 'For foreigners investing capital in companies or real estate in Colombia.' },
+          { title: 'Digital Nomad Visa', desc: 'Specifically designed for remote workers and international freelancers.' },
+          { title: 'Family Reunification', desc: 'Bring your family together in Colombia on a solid, legal migration basis.' },
+        ].map(v => (
+          <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:border-brand-300 hover:shadow-lg transition-all">
+            <div class="w-10 h-10 rounded-lg bg-navy-100 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-navy-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 class="font-semibold text-navy-900 mb-2">{v.title}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">{v.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <FaqAccordion
+    title="Frequently asked questions about visas and immigration in Colombia"
+    items={faqItems}
+  />
+
+  <!-- ── FORM ── -->
+  <section class="py-20 bg-gradient-to-br from-navy-900 to-navy-950" id="contact">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-5">Start your immigration process today</h2>
+          <p class="text-white/70 leading-relaxed mb-8">Tell us about your case and our team will give you a clear diagnosis of the most suitable visa for you.</p>
+          <div class="space-y-4">
+            {[
+              'Free eligibility assessment',
+              'Review of existing documentation',
+              'Clear fee proposal',
+              'Response within 24 business hours',
+            ].map(b => (
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-brand-500 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-navy-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-white/80 text-sm">{b}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <ContactForm lang="en" formId="imm-en-form" />
+      </div>
+    </div>
+  </section>
+
+  <Footer lang="en" />
+  <WhatsAppWidget lang="en" page="immigration" />
+</Layout>

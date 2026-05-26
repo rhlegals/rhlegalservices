@@ -1,0 +1,231 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import ContactForm from '../components/ContactForm.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+const firma = await getEntry('paginas', 'firma');
+if (!firma) {
+  throw new Error("No se pudo cargar 'src/content/paginas/firma.yaml'. Verifica que el archivo exista y que la colección esté registrada en config.ts.");
+}
+const d = firma.data;
+const hero = d.zona_hero;
+const historia = d.seccion_historia!;
+const misionValores = d.seccion_mision_valores!;
+const equipo = d.seccion_equipo!;
+const elegirnos = d.seccion_porque_elegirnos!;
+const contacto = d.seccion_contacto_formulario!;
+
+const misionIcons: Record<string, string> = {
+  diamante: `<svg class="w-9 h-9 mb-4" viewBox="0 0 24 24" fill="none" stroke="#A61A32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 9 12 22 2 9"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="12" y1="2" x2="7" y2="9"/><line x1="12" y1="2" x2="17" y2="9"/></svg>`,
+  brujula: `<svg class="w-9 h-9 mb-4" viewBox="0 0 24 24" fill="none" stroke="#A61A32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="12 5 14.5 9.5 12 8.5 9.5 9.5"/><polygon points="12 19 9.5 14.5 12 15.5 14.5 14.5"/><circle cx="12" cy="12" r="1.5"/><line x1="12" y1="3" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21"/><line x1="3" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21" y2="12"/></svg>`,
+  balanza: `<svg class="w-9 h-9 mb-4" viewBox="0 0 24 24" fill="none" stroke="#A61A32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><path d="M5 21h14"/><circle cx="12" cy="3" r="0.5" fill="#A61A32" stroke="none"/><line x1="3" y1="9" x2="12" y2="3"/><line x1="21" y1="9" x2="12" y2="3"/><path d="M3 9l-1.5 4.5h3L3 9z"/><path d="M21 9l-1.5 4.5h3L21 9z"/></svg>`,
+  globo: `<svg class="w-9 h-9 mb-4" viewBox="0 0 24 24" fill="none" stroke="#A61A32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3c-2 2.5-3 5.5-3 9s1 6.5 3 9"/><path d="M12 3c2 2.5 3 5.5 3 9s-1 6.5-3 9"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/></svg>`,
+  cronometro: `<svg class="w-9 h-9 mb-4" viewBox="0 0 24 24" fill="none" stroke="#A61A32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 14.5 15.5"/><line x1="10" y1="3" x2="14" y2="3"/><line x1="12" y1="3" x2="12" y2="5"/><line x1="19.5" y1="6.5" x2="21" y2="5"/></svg>`,
+  manos: `<svg class="w-9 h-9 mb-4" viewBox="0 0 24 24" fill="none" stroke="#A61A32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l4-4 3 1 3-2 3 2 3-1 4 4"/><path d="M2 12c1 2 3 4 5 4l2-2 2 2 2-2 2 2c2 0 4-2 5-4"/><line x1="9" y1="9" x2="9" y2="16"/><line x1="15" y1="9" x2="15" y2="16"/></svg>`,
+};
+---
+
+<Layout
+  title="Nuestra Firma | Quiénes Somos — R&H Legal Services"
+  description="Conoce al equipo de R&H Legal Services: abogados especializados en derecho migratorio, marcario y corporativo en Colombia. Experiencia, ética y resultados."
+  lang="es"
+  canonicalEs="/nuestra-firma"
+  canonicalEn="/en/our-firm"
+  ogImage="https://rhlegalservices.com/images/legal-library.jpg"
+  lcpImage="/images/legal-library.jpg"
+>
+  <Navbar lang="es" currentPath="/nuestra-firma" />
+
+  <!-- ── HERO ── -->
+  <section class="relative min-h-[55vh] flex items-end pb-16">
+    <img src={hero.imagen_fondo} alt="R&H Legal Services" fetchpriority="high" loading="eager" class="absolute inset-0 w-full h-full object-cover object-top -z-10" />
+    <div class="absolute inset-0 bg-navy-950/75"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-transparent"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 w-full">
+      <div class="inline-flex items-center gap-2 bg-brand-500/20 border border-brand-400/30 rounded-full px-4 py-1.5 mb-5">
+        <span class="text-brand-300 text-xs font-semibold tracking-wider uppercase">Quiénes Somos</span>
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight mb-4">
+        {hero.titulo_es.split(' sobre ')[0]} sobre<br />
+        <span class="text-brand-300">{hero.titulo_es.split(' sobre ')[1]}</span>
+      </h1>
+      <p class="text-white/75 text-lg max-w-2xl leading-relaxed">
+        {hero.descripcion_es}
+      </p>
+    </div>
+  </section>
+
+  <!-- ── NUESTRA HISTORIA ── -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-14 items-center">
+        <div>
+          <span class="text-brand-500 text-xs font-bold uppercase tracking-widest">Nuestra Historia</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-navy-900 mt-3 mb-6">
+            {historia.titulo_es}
+          </h2>
+          <div class="space-y-5 text-gray-600 leading-relaxed">
+            {historia.parrafos_es.map(p => <p>{p}</p>)}
+          </div>
+        </div>
+        <div class="relative">
+          <img
+            src={historia.imagen_lateral}
+            alt="Oficinas de R&H Legal Services en Colombia"
+            class="rounded-2xl shadow-xl w-full h-80 object-cover"
+            loading="lazy"
+            width="800"
+            height="320"
+          />
+          <div class="absolute -bottom-6 -left-6 bg-brand-500 text-white rounded-2xl p-6 shadow-xl">
+            <div class="text-3xl font-bold">10+</div>
+            <div class="text-sm opacity-90">Años de experiencia</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MISIÓN Y VALORES ── -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <span class="text-brand-500 text-xs font-bold uppercase tracking-widest">Misión y Valores</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-navy-900 mt-3 mb-4">{misionValores.titulo_es}</h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {misionValores.items.map(item => (
+          <div class="bg-white p-7 rounded-2xl border border-gray-100 hover:border-brand-300 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-300">
+            <Fragment set:html={misionIcons[item.icono] ?? misionIcons['balanza']} />
+            <h3 class="font-semibold text-navy-900 text-lg mb-2">{item.titulo_es}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">{item.texto_es}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EQUIPO ── -->
+  <section class="py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <span class="text-brand-500 text-xs font-bold uppercase tracking-widest">{equipo.titulo_es}</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-navy-900 mt-3 mb-4">{equipo.subtitulo_es}</h2>
+        <p class="text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Especialista con formación sólida, trayectoria internacional comprobada y compromiso genuino con cada cliente.
+        </p>
+      </div>
+
+      <div class="bg-gray-50 rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="flex flex-col md:flex-row">
+          <!-- Foto -->
+          <div class="md:w-72 flex-shrink-0">
+            <img
+              src={equipo.imagen_perfil}
+              alt={`${equipo.nombre} — R&H Legal Services`}
+              class="w-full h-full object-cover object-top"
+              loading="lazy"
+              width="288"
+              height="384"
+              style="aspect-ratio: 3/4; display: block;"
+            />
+          </div>
+          <!-- Bio -->
+          <div class="flex-1 p-8 md:p-10 flex flex-col justify-center">
+            <h3 class="text-2xl font-bold text-navy-900 mb-1 tracking-wide">{equipo.nombre}</h3>
+            <p class="text-sm font-semibold mb-5" style="color:#A61A32;">{equipo.cargo_es}</p>
+            <div class="space-y-4 text-gray-600 text-sm leading-relaxed mb-6">
+              {equipo.bio_es.map(p => <p>{p}</p>)}
+            </div>
+            <!-- Contacto y redes -->
+            <div class="space-y-2.5">
+              <!-- Email -->
+              <div class="flex items-center gap-3">
+                <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="#A61A32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <polyline points="2,4 12,13 22,4"/>
+                </svg>
+                <a href={`mailto:${equipo.datos_contacto.email}`} class="text-sm text-gray-700 hover:text-brand-600 transition-colors break-all">{equipo.datos_contacto.email}</a>
+              </div>
+              <!-- LinkedIn -->
+              <div class="flex items-center gap-3">
+                <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="#A61A32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="4"/>
+                  <line x1="8" y1="11" x2="8" y2="17"/>
+                  <line x1="8" y1="7" x2="8" y2="8"/>
+                  <path d="M12 17v-4a2 2 0 014 0v4"/>
+                  <line x1="12" y1="11" x2="12" y2="17"/>
+                </svg>
+                <a href={`https://www.linkedin.com/in/${equipo.datos_contacto.linkedin}`} target="_blank" rel="noopener noreferrer" class="text-sm text-gray-700 hover:text-brand-600 transition-colors">{equipo.datos_contacto.linkedin}</a>
+              </div>
+              <!-- Ubicación -->
+              <div class="flex items-center gap-3">
+                <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="#A61A32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2C8.134 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.134-7-7-7z"/>
+                  <circle cx="12" cy="9" r="2.5"/>
+                </svg>
+                <span class="text-sm text-gray-700">{equipo.datos_contacto.ubicacion}</span>
+              </div>
+            </div>
+            <!-- Etiquetas -->
+            <div class="mt-6 flex flex-wrap gap-2">
+              {equipo.etiquetas_practica.map(tag => (
+                <span class="text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200 px-3 py-1 rounded-full">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DIFERENCIADORES ── -->
+  <section class="py-20 bg-navy-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <span class="text-brand-300 text-xs font-bold uppercase tracking-widest">Por qué elegirnos</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mt-3 mb-4">{elegirnos.frase_ganadora_es}</h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {elegirnos.contadores.map(s => (
+          <div class="text-center p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-brand-500/40 transition-all">
+            <div class="text-4xl font-bold text-brand-300 mb-2">{s.numero}</div>
+            <div class="text-white font-semibold text-sm mb-2">{s.etiqueta_es}</div>
+            <div class="text-white/70 text-xs leading-relaxed">{s.descripcion_es}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACTO ── -->
+  <section class="py-20 bg-gradient-to-br from-brand-600 to-accent-600" id="contacto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-5">{contacto.titulo_es}</h2>
+          <p class="text-white/80 leading-relaxed mb-6">{contacto.descripcion_es}</p>
+          <div class="space-y-4">
+            {contacto.puntos_clave.map(b => (
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-white/85 text-sm">{b.texto_es}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <ContactForm lang="es" formId="firma-form" />
+      </div>
+    </div>
+  </section>
+
+  <Footer lang="es" />
+  <WhatsAppWidget lang="es" page="home" />
+</Layout>
