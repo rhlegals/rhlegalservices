@@ -49,7 +49,7 @@ const t = {
 <form
   id={formId}
   method="POST"
-  action="enviar.php"
+  action="https://api.staticforms.dev/submit"
   class={`bg-white rounded-2xl shadow-2xl ${compact ? 'p-5' : 'p-8'}`}
   novalidate
   data-lang={lang}
@@ -60,7 +60,10 @@ const t = {
     <input type="text" id={`${formId}-hp`} name="website" tabindex="-1" autocomplete="off" />
   </div>
 
-  <input type="hidden" name="redirect_url" value={redirectUrl} />
+  <!-- Campos de control requeridos por StaticForms -->
+  <input type="hidden" name="apiKey" value="sf_cc6237004d549ceb4a77140c" />
+  <input type="hidden" name="subject" value={isEs ? 'Contacto desde la Web Rh Legal Services' : 'Contact from Rh Legal Services Website'} />
+  <input type="hidden" name="redirectTo" value={redirectUrl} />
   <input type="hidden" name="g-recaptcha-response" id={`${formId}-recaptcha`} />
 
   <!-- Error banner -->
@@ -79,7 +82,7 @@ const t = {
       <input
         type="text"
         id={`${formId}-name`}
-        name="nombre"
+        name="name"
         required
         autocomplete="name"
         placeholder={isEs ? 'Ej. María García' : 'e.g. John Smith'}
@@ -109,9 +112,9 @@ const t = {
         {t.phone} <span class="text-brand-500">*</span>
       </label>
       <input
-        type="tel"
+        type="text"
         id={`${formId}-phone`}
-        name="celular"
+        name="phone"
         required
         autocomplete="tel"
         placeholder="+57 300 000 0000"
@@ -126,7 +129,7 @@ const t = {
       </label>
       <select
         id={`${formId}-service`}
-        name="servicio"
+        name="message"
         required
         class={`w-full px-3 border border-gray-200 rounded-lg text-navy-900 bg-white focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNCA2TDggMTBMMTIgNiIgc3Ryb2tlPSIjNjY3MTg1IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+')] bg-no-repeat bg-[right_12px_center] ${compact ? 'py-2.5 text-sm' : 'py-3 text-sm'}`}
       >
@@ -143,7 +146,7 @@ const t = {
       <input
         type="checkbox"
         id={`${formId}-privacy`}
-        name="acepta_privacidad"
+        name="privacy"
         value="si"
         required
         class="mt-0.5 w-4 h-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500 flex-shrink-0 cursor-pointer"
@@ -192,12 +195,12 @@ const t = {
     const honeypot = form.querySelector('[name="website"]');
     if (honeypot && honeypot.value) return;
 
-    // Strict field validation
-    const nombre = form.querySelector('[name="nombre"]');
+    // Strict field validation updated to match new names
+    const nombre = form.querySelector('[name="name"]');
     const email = form.querySelector('[name="email"]');
-    const celular = form.querySelector('[name="celular"]');
-    const servicio = form.querySelector('[name="servicio"]');
-    const privacy = form.querySelector('[name="acepta_privacidad"]');
+    const celular = form.querySelector('[name="phone"]');
+    const servicio = form.querySelector('[name="message"]');
+    const privacy = form.querySelector('[name="privacy"]');
 
     const nameVal = nombre ? nombre.value.trim() : '';
     const emailVal = email ? email.value.trim() : '';
