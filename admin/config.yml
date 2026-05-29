@@ -412,3 +412,67 @@ collections:
                   - { name: "pregunta_en", label: "Question (EN)", widget: "string" }
                   - { name: "respuesta_es", label: "Respuesta (ES)", widget: "text" }
                   - { name: "respuesta_en", label: "Answer (EN)", widget: "text" }
+                  # ─────────────────────────────────────────────
+  # CONFIGURACIÓN GENERAL (Elementos Globales)
+  # ─────────────────────────────────────────────
+  - name: "configuracion"
+    label: "Configuración General"
+    delete: false # Evita que borren el archivo por error
+    files:
+      - name: "general"
+        label: "Ajustes Globales del Sitio"
+        file: "src/content/configuracion/general.yaml"
+        fields:
+
+          # ── APARTADO: LOGO ──
+          - name: "ajustes_logo"
+            label: "Logo del Sitio Web"
+            widget: "object"
+            fields:
+              - { name: "logo_principal", label: "Logo Principal (Encabezado claro/oscuro)", widget: "image" }
+              - { name: "logo_alt", label: "Texto descriptivo del logo (SEO)", widget: "string" }
+
+          # ── APARTADO: MENÚ NAVEGACIÓN ──
+          - name: "ajustes_menu"
+            label: "Menú de Navegación (Navbar)"
+            widget: "object"
+            fields:
+              - name: "enlaces"
+                label: "Enlaces del Menú"
+                widget: "list"
+                summary: "{{fields.texto_es}} / {{fields.texto_en}}"
+                fields:
+                  - { name: "texto_es", label: "Texto del botón (Español)", widget: "string" }
+                  - { name: "texto_en", label: "Text (English)", widget: "string" }
+                  - { name: "url", label: "Dirección de destino (URL o Anclaje)", widget: "string", hint: "Ejemplo: / o /nuestra-firma o #contacto" }
+
+          # ── APARTADO: WHATSAPP ──
+          - name: "ajustes_whatsapp"
+            label: "Botón Flotante de WhatsApp"
+            widget: "object"
+            fields:
+              - { name: "numero_telefono", label: "Número de Teléfono (Con código de país)", widget: "string", hint: "Ejemplo para Colombia: 573000000000 (sin espacios ni el símbolo +)" }
+              - { name: "mensaje_bienvenida_es", label: "Mensaje predefinido (Español)", widget: "text", hint: "Texto automático que enviará el usuario al dar clic" }
+              - { name: "mensaje_bienvenida_en", label: "Predefined message (English)", widget: "text" }
+
+          # ── APARTADO: FOOTER ──
+          - name: "ajustes_footer"
+            label: "Pie de Página (Footer)"
+            widget: "object"
+            fields:
+              - { name: "texto_derechos_es", label: "Derechos de autor / Copyright (Español)", widget: "string" }
+              - { name: "texto_derechos_en", label: "Copyright text (English)", widget: "string" }
+              - name: "redes_sociales"
+                label: "Redes Sociales"
+                widget: "list"
+                required: false
+                fields:
+                  - name: "plataforma"
+                    label: "Plataforma"
+                    widget: "select"
+                    options:
+                      - { label: "Instagram", value: "instagram" }
+                      - { label: "LinkedIn", value: "linkedin" }
+                      - { label: "Facebook", value: "facebook" }
+                      - { label: "YouTube", value: "youtube" }
+                  - { name: "url_perfil", label: "Enlace directo al perfil", widget: "string" }
